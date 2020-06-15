@@ -44,12 +44,13 @@ const Mutation = {
   createPost(
     _parent: undefined,
     args: { data: { title: string; author: string } },
-    ctx: { db: typeof db }
+    ctx: { db: typeof db; pubSub: any }
   ) {
     const newPost = {
       id: v1(),
       ...args.data,
     };
+    ctx.pubSub.publish('post', { post: newPost });
     ctx.db.posts.push(newPost);
     return newPost;
   },
