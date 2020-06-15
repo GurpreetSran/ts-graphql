@@ -68,7 +68,7 @@ const Mutation = {
 
     return deletedPost[0];
   },
-  createComment(_parent: undefined, args: any, ctx: { db: typeof db }) {
+  createComment(_parent: undefined, args: any, ctx: any) {
     const newComment = {
       id: v1(),
       text: args.data.text,
@@ -77,6 +77,7 @@ const Mutation = {
     };
 
     ctx.db.comments.push(newComment);
+    ctx.pubSub.publish(`comment ${args.data.post}`, { comment: newComment });
     return newComment;
   },
 
