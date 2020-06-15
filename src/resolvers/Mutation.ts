@@ -1,3 +1,9 @@
+enum mutations {
+  CREATED,
+  UPDATED,
+  DELETED,
+}
+
 import { v1 } from 'uuid';
 import db from '../db';
 
@@ -50,7 +56,12 @@ const Mutation = {
       id: v1(),
       ...args.data,
     };
-    ctx.pubSub.publish('post', { post: newPost });
+    ctx.pubSub.publish('post', {
+      post: {
+        mutation: mutations.CREATED,
+        data: newPost,
+      },
+    });
     ctx.db.posts.push(newPost);
     return newPost;
   },
